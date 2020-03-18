@@ -1,37 +1,63 @@
 const express = require('express');
-const app = express();
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const app = express();
 
-app.use(bodyParser.urlencoded({extended:true}));
-app.set("view engine","ejs");
+app.use(bodyParser.urlencoded({ extended: true }));
+app.set("view engine", "ejs");
+mongoose.connect("mongodb+srv://MongoDB:manager@cluster0-scu13.mongodb.net/AlphabetDB?retryWrites=true&w=majority");
 
-var Alphabet = [
-    {alpha:"A : Apple",image:"https://i.ytimg.com/vi/RTfvXkEXa-k/maxresdefault.jpg"},
-    {alpha:"B : Ball",image:"https://i.ytimg.com/vi/XlUPuj2V6PM/maxresdefault.jpg"},
-    {alpha:"C : Cat",image:"https://i.ytimg.com/vi/Haj9TAFCv5w/maxresdefault.jpg"},
-    {alpha:"D : Dog",image:"https://i.ytimg.com/vi/XkTsdHlMXZM/maxresdefault.jpg"},
-];
+// ======================================================
+// ==================== SCHEMA SETUP ====================
+// ======================================================
 
-app.get("/",(req,res) =>{
+var alphabetSchema = new mongoose.Schema({
+    name: String,
+    image: String
+});
+
+var Alphabet = mongoose.model("Alphabet", alphabetSchema);
+
+// ======================================================
+// ==================== INDEX ====================
+// ====================================================== 
+
+app.get("/", (req, res) => {
     res.render("home");
 });
 
-app.get("/alphabets",(req,res) =>{
-    res.render("alphabet",{Alpha:Alphabet});
+app.get("/alphabet", (req, res) => {
+    // Get all alphabet from DB
+    Alphabet.find({}, (err, allAlphabets) => {
+        if (err)
+            console.log(err);
+        else
+            res.render("alphabet", { Alpha: allAlphabets });
+    })
 });
 
-app.post("/alphabets",(req,res) =>{
+app.post("/alphabet", (req, res) => {
     let name = req.body.name;
     let image = req.body.image;
-    let newAlpha = {alpha: name, image: image}
-    Alphabet.push(newAlpha);
+    let newAlpha = { name: name, image: image }
+    
+    console.log(name + "   " + image);
+
+    Alphabet.create(newAlpha, (err, newAlphabet) => {
+        if (err)
+            console.log("Error");
+        else {
+            console.log("NEWLY CREATED ALPHABET : ");
+            console.log(newAlphabet);
+        }
+    })
     res.redirect("/alphabet");
 });
 
-app.get("/newalphabet",(req,res) =>{
+app.get("/newalphabet", (req, res) => {
     res.render("new");
 });
 
-app.listen(3000,()=>{
+app.listen(3000, () => {
     console.log("server start on port 3000");
 });
