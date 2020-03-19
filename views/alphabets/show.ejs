@@ -1,0 +1,18 @@
+<%- include('../partials/header'); -%>
+<h1> <%= alphabet.name %> </h1>
+<img src="<%= alphabet.image %>" />
+<h6>Description : </h3>
+<p> <%= alphabet.description %> </p>
+
+<p>
+    <a class="btn btn-success" href="/alphabets/<%= alphabet._id %>/comments/new">Add New Comment</a>
+</p>
+
+<h3> Comment : </h2>
+
+<% alphabet.comments.forEach((comment)=>{ %>
+<p>
+    <strong><%= comment.author %> </strong> - <%= comment.text %>
+</p>
+<% }) %>
+<%- include('../partials/footer'); -%>
