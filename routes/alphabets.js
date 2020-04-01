@@ -1,15 +1,18 @@
 const express = require('express');
 const router = express.Router();
+const moment = require('moment');
 const Alphabet = require('../models/alphabet');
 
 // INDEX - (SHOW ALL ALPHABETS)
 router.get("/", (req, res) => {
     // Get all alphabet from DB
     Alphabet.find({}, (err, allAlphabets) => {
-        if (err)
+        if (err) {
             cconsole.log("\n" + err + "\n");
-        else
+        }
+        else {
             res.render("alphabets/index", { Alpha: allAlphabets });
+        }
     })
 });
 
@@ -23,8 +26,9 @@ router.post("/", (req, res) => {
     console.log(name + "   " + image);
 
     Alphabet.create(newAlpha, (err, newAlphabet) => {
-        if (err)
+        if (err) {
             console.log("\n" + err + "\n");
+        }
         else {
             console.log("NEWLY CREATED ALPHABET : ");
             console.log(newAlphabet);
@@ -40,12 +44,17 @@ router.get("/new", (req, res) => {
 
 // SHOW - (SHOW MORE INFO ABOUT ONE ALPHABETS)
 router.get("/:id", (req, res) => {
-    Alphabet.findById(req.params.id, (err, foundAlphabet) => {
-        if (err)
-            console.log("\n" + err + "\n");
-        else
-            res.render("alphabets/show", { alphabet: foundAlphabet });
-    })
+    Alphabet.findById(req.params.id)
+        .populate('comments')
+        .exec((err, foundAlphabet) => {
+            if (err) {
+                console.log("\n" + err + "\n");
+            }
+            else {
+                console.log(foundAlphabet);
+                res.render("alphabets/show", { alphabet: foundAlphabet, moment: moment });
+            }
+        });
 });
 
 module.exports = router;

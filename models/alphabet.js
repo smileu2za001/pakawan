@@ -5,8 +5,8 @@ var alphabetSchema = new mongoose.Schema({
     description: String,
     comments: [
         {
-            text: String,
-            author: String
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Comment"
         }
     ]
 });

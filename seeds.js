@@ -8,3 +8,8 @@ function seedDB() {
 }
 
 module.exports = seedDB
+
+
+// A : Apple
+// https://i.ytimg.com/vi/RTfvXkEXa-k/maxresdefault.jpg
+// Learn all about the letter A with our Phonics letter A song! Here comes the letter A!

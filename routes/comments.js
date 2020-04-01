@@ -1,4 +1,5 @@
 const express = require('express');
+const moment = require('moment');
 const router = express.Router({ mergeParams: true }); // NOT USE MERGE PARAM IF PATH FULL
 const Alphabet = require('../models/alphabet');
 const Comment = require('../models/comment');
@@ -16,20 +17,21 @@ router.get('/new', isLoggedIn, (req, res) => {
 
 // COMMENT CREATE
 router.post('/', (req, res) => {
-    //Lookup alphabet using id
     Alphabet.findById(req.params.id, (err, alphabet) => {
         if (err)
             console.log("\n" + err + "\n");
         else {
-            //create new comment
             Comment.create(req.body.comment, (err, comment) => {
                 if (err)
                     console.log("\n" + err + "\n");
                 else {
-                    //connect new comment to alphabet
+                    comment.author.id = req.user._id;
+                    comment.author.username = req.user.username;
+                    comment.date = moment().format('YYYYMMDD , HH:mm:ss');
+                    comment.save();
+                    
                     alphabet.comments.push(comment);
                     alphabet.save();
-                    //redirect alphabete show page
                     res.redirect('/alphabets/' + alphabet._id);
                 }
             });

@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
-
+const moment = require('moment');
 const app = express();
 
 // REQUIRING ROUTE
@@ -12,12 +12,12 @@ const commentRoutes = require('./routes/comments.js')
 const indexRoutes = require('./routes/index.js')
 const alphabetRoutes = require('./routes/alphabets.js')
 
-//MONGOOSE MODELS
+// MONGOOSE MODELS
 const Alphabet = require('./models/alphabet');
 const Comment = require('./models/comment');
 const User = require('./models/user');
 
-//DELETE ALL DATABASE
+// DELETE ALL DATABASE
 const seedDB = require('./seeds');
 
 app.use(express.static(__dirname + "/public"));
@@ -55,5 +55,8 @@ app.use('/alphabets/:id/comments', commentRoutes);
 
 // SERVER/PORT CONFIGURATION
 app.listen(3000, () => {
-    console.log("server start on port 3000");
+    console.log("\nserver start on port 3000");
+    var a = "20200331 , 11:34:03";
+    var c = moment(a, "YYYYMMDD , HH:mm:ss").fromNow();
+    console.log(c + "\n");
 });

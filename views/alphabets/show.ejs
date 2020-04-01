@@ -27,17 +27,16 @@
                 <a class=" float-right btn btn-success" href="/alphabets/<%= alphabet._id %>/comments/new">Add New
                     Comment</a>
 
-                <h3> Comment : </h2>
+                <h3> Comment : </h3>
 
                     <% alphabet.comments.forEach((comment)=>{ %>
                     <div class="row">
                         <div class="col-md-12">
-                            <strong><%= comment.author %></strong>
-                            <span class="float-right"> 10 days ago</span>
+                            <strong><%= comment.author.username %></strong>
+                            <span class="float-right"><%= moment(comment.date, "YYYYMMDD , HH:mm:ss").fromNow() %></span>
                             <p> <%= comment.text %> </p>
                         </div>
                     </div>
-
                     <% }) %>
             </div>
         </div>
